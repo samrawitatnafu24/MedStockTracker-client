@@ -1,0 +1,643 @@
+
+/* =====================================================
+   MEDSTOCK MEDICINES PAGE
+===================================================== */
+
+.medicines-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 24px;
+  min-width: 0;
+  color: #1e293b;
+}
+
+/* PAGE HEADER */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: #64748b;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stock-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stock-summary span {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.stock-summary small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* BUTTONS */
+
+.add-button,
+.save-button {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  background: #2563eb;
+  color: white;
+  transition: .2s;
+}
+
+.add-button:hover,
+.save-button:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* SEARCH AND FILTER */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-box input,
+.branch-filter select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  background: white;
+  color: #1e293b;
+}
+
+.search-box input:focus,
+.branch-filter select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px #2563eb18;
+}
+
+.branch-filter {
+  width: 220px;
+}
+
+/* STATUS SUMMARY */
+
+.status-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 22px;
+  padding: 16px 18px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.summary-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.expired-dot,
+.out-dot {
+  background: #dc2626;
+}
+
+.low-dot {
+  background: #d97706;
+}
+
+.in-stock-dot {
+  background: #16a34a;
+}
+
+/* ADD AND EDIT FORM */
+
+.add-form-card {
+  padding: 24px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px #0f172a0a;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.form-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.close-button {
+  border: none;
+  background: #f1f5f9;
+  color: #334155;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #e2e8f0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.form-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px #2563eb18;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  padding: 10px 18px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-button:hover {
+  background: #f1f5f9;
+}
+
+/* ERRORS AND LOADING */
+
+.form-error,
+.error {
+  padding: 13px 16px;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 9px;
+}
+
+/* MEDICINES TABLE */
+
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-container > table {
+  width: 100%;
+  min-width: 1150px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table-container th {
+  padding: 15px 13px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table-container td {
+  padding: 15px 13px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.table-container tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-container th,
+.table-container td {
+  box-sizing: border-box;
+}
+
+/* STATUS BADGES */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.status-badge.instock {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.lowstock {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.outofstock {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+.status-badge.expired {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* EXPIRY WARNING */
+
+.expiry-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.expiry-danger {
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.expiry-warning {
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+/* ACTION BUTTONS */
+
+.actions-cell {
+  min-width: 250px;
+  white-space: nowrap !important;
+}
+
+.actions-cell button {
+  display: inline-block;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  margin: 3px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.history-button {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.history-button:hover {
+  background: #bae6fd;
+}
+
+.edit-button {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.edit-button:hover {
+  background: #bfdbfe;
+}
+
+.delete-button {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-button:hover {
+  background: #fecaca;
+}
+
+/* EMPTY TABLE */
+
+.empty {
+  padding: 35px !important;
+  text-align: center !important;
+  color: #64748b;
+}
+
+/* PAGINATION */
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.pagination-info {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pagination-controls button {
+  min-width: 36px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.pagination-controls button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.pagination-controls button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* STOCK HISTORY MODAL */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, .65);
+}
+
+.history-modal {
+  width: min(800px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px #0003;
+}
+
+.history-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.history-modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.history-modal-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.history-loading {
+  padding: 40px 24px;
+  text-align: center;
+  color: #64748b;
+}
+
+.history-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 55vh;
+}
+
+.history-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+}
+
+.history-table th,
+.history-table td {
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.history-action {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.history-action.stock-in {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.history-action.stock-out {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.quantity-in {
+  color: #16a34a;
+}
+
+.quantity-out {
+  color: #dc2626;
+}
+
+.history-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 768px) {
+  .medicines-page {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .branch-filter {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-summary {
+    gap: 14px;
+  }
+
+  .pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pagination-controls {
+    width: 100%;
+  }
+
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .history-modal {
+    max-height: 94vh;
+  }
+
+  .history-modal-header,
+  .history-modal-footer {
+    padding: 14px;
+  }
+}

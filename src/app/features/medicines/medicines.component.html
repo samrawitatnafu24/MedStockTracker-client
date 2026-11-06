@@ -1,0 +1,447 @@
+﻿
+<div class="medicines-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Medicines</h1>
+      <p>Manage medicines and inventory stock.</p>
+    </div>
+
+    <div class="header-actions">
+      <div class="stock-summary">
+        <span>{{ filteredMedicines().length }}</span>
+        <small>Medicines</small>
+      </div>
+
+      <button type="button" class="add-button" (click)="openAddForm()">
+        + Add Medicine
+      </button>
+    </div>
+  </div>
+
+  <!-- GLOBAL ERROR -->
+  <div class="form-error"
+       *ngIf="formError() && !showAddForm() && !showEditForm()">
+    {{ formError() }}
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form-card" *ngIf="showAddForm()">
+    <div class="form-header">
+      <div>
+        <h2>Add Medicine</h2>
+        <p>Enter medicine and stock information.</p>
+      </div>
+      <button type="button" class="close-button" (click)="closeAddForm()">Ã—</button>
+    </div>
+
+    <div class="form-error" *ngIf="formError()">
+      {{ formError() }}
+    </div>
+
+    <form (ngSubmit)="addMedicine()">
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="medicineName">Medicine Name</label>
+          <input id="medicineName" name="name" type="text"
+                 [(ngModel)]="newMedicine.name" required />
+        </div>
+
+        <div class="form-field">
+          <label for="batchNumber">Batch Number</label>
+          <input id="batchNumber" name="batchNumber" type="text"
+                 [(ngModel)]="newMedicine.batchNumber" required />
+        </div>
+
+        <div class="form-field">
+          <label for="quantity">Quantity</label>
+          <input id="quantity" name="quantity" type="number" min="0"
+                 [(ngModel)]="newMedicine.quantity" required />
+        </div>
+
+        <div class="form-field">
+          <label for="minimumQuantity">Minimum Quantity</label>
+          <input id="minimumQuantity" name="minimumQuantity"
+                 type="number" min="0"
+                 [(ngModel)]="newMedicine.minimumQuantity" required />
+        </div>
+
+        <div class="form-field">
+          <label for="price">Price (ETB)</label>
+          <input id="price" name="price" type="number" min="0"
+                 step="0.01" [(ngModel)]="newMedicine.price" required />
+        </div>
+
+        <div class="form-field">
+          <label for="expiryDate">Expiry Date</label>
+          <input id="expiryDate" name="expiryDate" type="date"
+                 [(ngModel)]="newMedicine.expiryDate" required />
+        </div>
+
+        <div class="form-field">
+          <label for="hospitalBranch">Hospital Branch</label>
+          <input id="hospitalBranch" name="hospitalBranch" type="text"
+                 [(ngModel)]="newMedicine.hospitalBranch" required />
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-button"
+                (click)="closeAddForm()" [disabled]="isSaving()">
+          Cancel
+        </button>
+
+        <button type="submit" class="save-button"
+                [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Save Medicine' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- EDIT FORM -->
+  <div class="add-form-card" *ngIf="showEditForm()">
+    <div class="form-header">
+      <div>
+        <h2>Edit Medicine</h2>
+        <p>Update medicine and stock information.</p>
+      </div>
+      <button type="button" class="close-button" (click)="closeEditForm()">Ã—</button>
+    </div>
+
+    <div class="form-error" *ngIf="formError()">
+      {{ formError() }}
+    </div>
+
+    <form (ngSubmit)="updateMedicine()">
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="editMedicineName">Medicine Name</label>
+          <input id="editMedicineName" name="editName" type="text"
+                 [(ngModel)]="editMedicine.name" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editBatchNumber">Batch Number</label>
+          <input id="editBatchNumber" name="editBatchNumber" type="text"
+                 [(ngModel)]="editMedicine.batchNumber" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editQuantity">Quantity</label>
+          <input id="editQuantity" name="editQuantity" type="number"
+                 min="0" [(ngModel)]="editMedicine.quantity" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editMinimumQuantity">Minimum Quantity</label>
+          <input id="editMinimumQuantity" name="editMinimumQuantity"
+                 type="number" min="0"
+                 [(ngModel)]="editMedicine.minimumQuantity" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editPrice">Price (ETB)</label>
+          <input id="editPrice" name="editPrice" type="number"
+                 min="0" step="0.01"
+                 [(ngModel)]="editMedicine.price" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editExpiryDate">Expiry Date</label>
+          <input id="editExpiryDate" name="editExpiryDate" type="date"
+                 [(ngModel)]="editMedicine.expiryDate" required />
+        </div>
+
+        <div class="form-field">
+          <label for="editHospitalBranch">Hospital Branch</label>
+          <input id="editHospitalBranch" name="editHospitalBranch"
+                 type="text" [(ngModel)]="editMedicine.hospitalBranch"
+                 required />
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-button"
+                (click)="closeEditForm()" [disabled]="isSaving()">
+          Cancel
+        </button>
+
+        <button type="submit" class="save-button"
+                [disabled]="isSaving()">
+          {{ isSaving() ? 'Updating...' : 'Update Medicine' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- SEARCH AND FILTER -->
+  <div class="toolbar">
+    <div class="search-box">
+      <input type="text"
+             placeholder="Search by medicine, batch or branch..."
+             [value]="searchTerm()"
+             (input)="onSearch($any($event.target).value)" />
+    </div>
+
+    <div class="branch-filter">
+      <select [value]="selectedBranch()"
+              (change)="onBranchChange($any($event.target).value)">
+        <option value="">All Branches</option>
+        <option *ngFor="let branch of branches()" [value]="branch">
+          {{ branch }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STATUS SUMMARY -->
+  <div class="status-summary" *ngIf="!store.isLoading()">
+    <div class="summary-item">
+      <span class="summary-dot expired-dot"></span>
+      <span>Expired: {{
+        expiredCount()
+      }}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-dot low-dot"></span>
+      <span>Low Stock: {{
+        lowStockCount()
+      }}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-dot in-stock-dot"></span>
+      <span>In Stock: {{
+        inStockCount()
+      }}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="summary-dot out-dot"></span>
+      <span>Out of Stock: {{
+        outOfStockCount()
+      }}</span>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" *ngIf="store.isLoading()">
+    Loading medicines...
+  </div>
+
+  <!-- ERROR -->
+  <div class="error" *ngIf="store.error()">
+    {{ store.error() }}
+  </div>
+
+  <!-- MEDICINES TABLE -->
+  <div class="table-container" *ngIf="!store.isLoading()">
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Batch</th>
+          <th>Branch</th>
+          <th>Quantity</th>
+          <th>Minimum</th>
+          <th>Price</th>
+          <th>Expiry</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let medicine of paginatedMedicines()">
+
+          <td>
+            <strong>{{ medicine.name }}</strong>
+          </td>
+
+          <td>{{ medicine.batchNumber }}</td>
+
+          <td>{{ medicine.hospitalBranch || '-' }}</td>
+
+          <td>
+            <strong>{{ medicine.quantity }}</strong>
+          </td>
+
+          <td>{{ medicine.minimumQuantity }}</td>
+
+          <td>{{ medicine.price | number:'1.2-2' }} ETB</td>
+
+          <td>
+            <div class="expiry-cell">
+              <span>{{ medicine.expiryDate | date:'mediumDate' }}</span>
+
+              <small *ngIf="getStatus(medicine) === 'Expired'"
+                     class="expiry-danger">
+                Expired
+              </small>
+
+              <small *ngIf="isExpiringSoon(medicine)"
+                     class="expiry-warning">
+                Expires in {{ getDaysUntilExpiry(medicine) }} days
+              </small>
+            </div>
+          </td>
+
+          <td>
+            <span class="status-badge"
+                  [ngClass]="getStatusClass(medicine)">
+              {{ getStatus(medicine) }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+            <button type="button" class="history-button"
+                    (click)="viewStockHistory(medicine)"
+                    [disabled]="isSaving() || isLoadingHistory()">
+              History
+            </button>
+
+            <button type="button" class="edit-button"
+                    (click)="openEditForm(medicine)"
+                    [disabled]="isSaving()">
+              Edit
+            </button>
+
+            <button type="button" class="delete-button"
+                    (click)="deleteMedicine(medicine)"
+                    [disabled]="isSaving()">
+              Delete
+            </button>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="filteredMedicines().length === 0">
+          <td colspan="9" class="empty">
+            No medicines found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" *ngIf="filteredMedicines().length > 0">
+
+    <div class="pagination-info">
+      Showing {{ startItem() }}â€“{{ endItem() }}
+      of {{ filteredMedicines().length }} medicines
+    </div>
+
+    <div class="pagination-controls">
+
+      <button type="button"
+              (click)="goToPage(currentPage() - 1)"
+              [disabled]="currentPage() === 1">
+        Previous
+      </button>
+
+      <button type="button"
+              *ngFor="let page of pageNumbers()"
+              [class.active]="currentPage() === page"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button type="button"
+              (click)="goToPage(currentPage() + 1)"
+              [disabled]="currentPage() === totalPages()">
+        Next
+      </button>
+
+    </div>
+  </div>
+
+  <!-- STOCK HISTORY MODAL -->
+  <div class="modal-backdrop"
+       *ngIf="selectedHistoryMedicine()"
+       (click)="closeStockHistory()">
+
+    <div class="history-modal"
+         (click)="$event.stopPropagation()">
+
+      <div class="history-modal-header">
+        <div>
+          <h2>Stock History</h2>
+          <p>{{ selectedHistoryMedicine()?.name }}</p>
+        </div>
+
+        <button type="button" class="close-button"
+                (click)="closeStockHistory()">Ã—</button>
+      </div>
+
+      <div class="form-error" *ngIf="formError()">
+        {{ formError() }}
+      </div>
+
+      <div class="history-loading" *ngIf="isLoadingHistory()">
+        Loading stock history...
+      </div>
+
+      <div class="history-table-container" *ngIf="!isLoadingHistory()">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Action</th>
+              <th>Quantity Change</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of stockHistory()">
+              <td>{{ item.timestamp | date:'medium' }}</td>
+
+              <td>
+                <span class="history-action"
+                      [ngClass]="{
+                        'stock-in': item.changeQuantity > 0,
+                        'stock-out': item.changeQuantity < 0
+                      }">
+                  {{ item.actionType }}
+                </span>
+              </td>
+
+              <td>
+                <strong
+                  [class.quantity-in]="item.changeQuantity > 0"
+                  [class.quantity-out]="item.changeQuantity < 0">
+                  {{ item.changeQuantity > 0
+                    ? '+' + item.changeQuantity
+                    : item.changeQuantity }}
+                </strong>
+              </td>
+            </tr>
+
+            <tr *ngIf="stockHistory().length === 0">
+              <td colspan="3" class="empty">
+                No stock history found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="history-modal-footer">
+        <button type="button" class="cancel-button"
+                (click)="closeStockHistory()">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

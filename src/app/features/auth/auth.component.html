@@ -1,0 +1,69 @@
+<main class="login-container" dir="ltr">
+  <mat-card class="login-card">
+    <div class="brand-header">
+      <div class="brand-mark">
+        <mat-icon>local_pharmacy</mat-icon>
+      </div>
+
+      <span class="section-kicker">Central pharmacy network</span>
+
+      <h1>MedStock Tracker</h1>
+
+      <p>Enterprise Pharmacy Inventory Portal</p>
+    </div>
+
+    <form class="login-form" dir="ltr" (ngSubmit)="onSubmit()">
+      <mat-form-field class="login-field" appearance="outline">
+        <mat-label>Username or email</mat-label>
+
+        <mat-icon matPrefix>person_outline</mat-icon>
+
+        <input
+          matInput
+          type="text"
+          name="username"
+          [(ngModel)]="credentials.username"
+          placeholder="Username or email"
+          required
+          autocomplete="username"
+        />
+      </mat-form-field>
+
+      <mat-form-field class="login-field" appearance="outline">
+        <mat-label>Password</mat-label>
+
+        <mat-icon matPrefix>lock_outline</mat-icon>
+
+        <input
+          matInput
+          type="password"
+          name="password"
+          [(ngModel)]="credentials.password"
+          placeholder="Password"
+          required
+          autocomplete="current-password"
+        />
+      </mat-form-field>
+
+      @if (errorMessage) {
+        <div class="error-alert">
+          <mat-icon>error_outline</mat-icon>
+          {{ errorMessage }}
+        </div>
+      }
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="isLoading"
+      >
+        <mat-icon>
+          {{ isLoading ? 'hourglass_top' : 'login' }}
+        </mat-icon>
+
+        {{ isLoading ? 'Verifying identity...' : 'Access system ledger' }}
+      </button>
+    </form>
+  </mat-card>
+</main>

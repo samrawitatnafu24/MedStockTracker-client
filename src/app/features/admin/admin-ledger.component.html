@@ -1,0 +1,24 @@
+<section class="admin-ledger">
+  <h2>Admin Ledger</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Medicine</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Updated By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of ledgerEntries">
+        <td>{{ entry.id }}</td>
+        <td>{{ entry.medicine }}</td>
+        <td>{{ entry.quantity }}</td>
+        <td>{{ entry.status }}</td>
+        <td>{{ entry.updatedBy }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

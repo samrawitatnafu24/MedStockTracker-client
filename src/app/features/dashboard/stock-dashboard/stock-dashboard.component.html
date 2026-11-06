@@ -1,0 +1,108 @@
+﻿<div class="dashboard-wrapper" style="padding: 2rem; font-family: sans-serif; background-color: #f8fafc; min-height: 100vh;">
+  
+  <!-- ðŸ” PART A: Cross-Pharmacy Stock Finder Portal -->
+  <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2>ðŸ” Cross-Pharmacy Stock Finder Portal</h2>
+    <p style="color: #64748b; font-size: 0.9rem;">Type the medication name below to query all network branches for real-time stock balances, pricing, and geolocation parameters.</p>
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+      <input #searchInput type="text" placeholder="Search network registries (e.g., Insulin)..." style="flex: 1; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+      <button (click)="onPublicSearch(searchInput.value)" style="background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: bold;">Query Network Registry</button>
+    </div>
+
+    <!-- Search Results Display Area -->
+    @if (searchResults.length > 0) {
+      <div style="margin-top: 1.5rem; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <tr style="background: #f1f5f9;">
+            <th style="padding: 0.75rem;">Pharmacy</th>
+            <th style="padding: 0.75rem;">Quantity</th>
+            <th style="padding: 0.75rem;">Price</th>
+            <th style="padding: 0.75rem;">Location</th>
+            <th style="padding: 0.75rem;">Contact</th>
+          </tr>
+          @for (result of searchResults; track result.Pharmacy) {
+            <tr style="border-top: 1px solid #e2e8f0;">
+              <td style="padding: 0.75rem; font-weight: bold;">{{ result.Pharmacy }}</td>
+              <td style="padding: 0.75rem;">{{ result.Quantity }} items</td>
+              <td style="padding: 0.75rem; color: #16a34a;">${{ result.Price | number:'1.2-2' }}</td>
+              <td style="padding: 0.75rem; color: #64748b;">{{ result.Location }}</td>
+              <td style="padding: 0.75rem; font-weight: 500;">{{ result.Phone }}</td>
+            </tr>
+          }
+        </table>
+      </div>
+    }
+  </section>
+
+  <!-- ðŸ“¥ PART B: Bulk Inventory Sheet Upload -->
+  <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2>ðŸ“¥ Bulk Inventory Sheet Upload</h2>
+    <p style="color: #64748b; font-size: 0.9rem;">Select a pharmacy distribution supplier ledger sheet (.csv) to load multiple items instantly.</p>
+    <input type="file" (change)="onFileSelected($event)" style="margin-top: 1rem; block-size: auto;" />
+  </section>
+
+  <!-- âž• PART C: Register / Update Medication Batch Form -->
+  <section style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2>âž• Register / Update Medication Batch</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <input #medName type="text" placeholder="Medicine Name" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+      <input #medBatch type="text" placeholder="Batch Number" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+      <input #medQty type="number" placeholder="Quantity" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+      <input #medPrice type="number" placeholder="Price ($)" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+      <input #medExpiry type="date" style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;" />
+    </div>
+    <button (click)="onAddMedicine(medName.value, medBatch.value, medQty.value, medPrice.value, medExpiry.value)" style="margin-top: 1.5rem; background: #16a34a; color: white; border: none; padding: 0.75rem 2rem; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;">Save Medicine</button>
+  </section>
+
+  <!-- ðŸ“‹ PART D: Main Pharmacy Stock Inventory DataGrid -->
+  <section style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">ðŸ“‹ Active Branch Stock Inventory Ledger</h2>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+      <thead>
+        <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1;">
+          <th style="padding: 1rem;">ID</th>
+          <th style="padding: 1rem;">Medicine Name</th>
+          <th style="padding: 1rem;">Batch Number</th>
+          <th style="padding: 1rem;">Stock Status Level</th>
+          <th style="padding: 1rem;">Price</th>
+<th style="padding: 1rem;">Registered Date</th>
+          <th style="padding: 1rem;">Expiry Date</th>
+          <th style="padding: 1rem; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (med of medicinesList; track med.id) {
+          <tr style="border-top: 1px solid #e2e8f0; vertical-align: middle;">
+            <td style="padding: 1rem;">{{ med.id }}</td>
+            <td style="padding: 1rem; font-weight: bold; color: #1e293b;">{{ med.name }}</td>
+            <td style="padding: 1rem; font-family: monospace;">{{ med.batchNumber }}</td>
+            <td style="padding: 1rem;">
+              @if (med.quantity === 0) {
+                <span style="background: #fee2e2; color: #ef4444; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">âŒ OUT OF STOCK</span>
+              } @else if (med.quantity <= 5) {
+                <span style="background: #fef3c7; color: #d97706; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">âš ï¸ LOW STOCK ({{ med.quantity }})</span>
+              } @else {
+                <span style="background: #dcfce7; color: #16a34a; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">âœ… SAFE ({{ med.quantity }})</span>
+              }
+            </td>
+            <td style="padding: 1rem; font-weight: 600; color: #0f172a;">${{ med.price | number:'1.2-2' }}</td>
+<td style="padding: 1rem; color: #475569;">{{ (med.createdAt | date:'mediumDate') || 'N/A' }}</td>`r`n            <td style="padding: 1rem; color: #475569;">{{ med.expiryDate | date:'mediumDate' }}</td>
+            <td style="padding: 1rem; text-align: center; display: flex; gap: 0.5rem; justify-content: center;">
+              <button (click)="onEditMedicine(med, medName, medBatch, medQty, medPrice, medExpiry)" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;">âœï¸ Edit</button>
+              <button (click)="onDeleteMedicine(+med.id)" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;">ðŸ—‘ï¸ Delete</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">No medication records loadedinto the branch view matrix.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+
+
+

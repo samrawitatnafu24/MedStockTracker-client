@@ -1,0 +1,4 @@
+/* Stock dashboard styles */
+:host {
+  display: block;
+}

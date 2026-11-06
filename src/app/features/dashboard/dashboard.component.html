@@ -1,0 +1,519 @@
+﻿<div class="medstock-dashboard">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">
+        <mat-icon>medication</mat-icon>
+      </div>
+
+      <span>MedStock</span>
+    </div>
+
+    <div class="sidebar-section-title">MAIN</div>
+
+    <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-link">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </a>
+
+    <a routerLink="/medicines" routerLinkActive="active" class="sidebar-link">
+      <mat-icon>medication</mat-icon>
+      <span>Medicines</span>
+    </a>
+
+    <a routerLink="/admin/ledger" routerLinkActive="active" class="sidebar-link">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Admin Ledger</span>
+    </a>
+
+    <div class="sidebar-section-title transactions">
+      TRANSACTIONS
+    </div>
+
+    <div class="sidebar-link disabled">
+      <mat-icon>point_of_sale</mat-icon>
+      <span>Sales</span>
+    </div>
+
+    <div class="sidebar-link disabled">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>Purchases</span>
+    </div>
+
+    <div class="sidebar-link disabled">
+      <mat-icon>local_shipping</mat-icon>
+      <span>Suppliers</span>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">SA</div>
+
+      <div class="user-info">
+        <strong>Samrawit Admin</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+
+  </aside>
+
+
+  <section class="main-area">
+
+    <mat-toolbar class="topbar">
+
+      <div class="topbar-title">
+        <span>MEDSTOCK MANAGEMENT SYSTEM</span>
+        <h1>Dashboard</h1>
+      </div>
+
+      <div class="topbar-actions">
+
+        <div class="search-box">
+          <mat-icon>search</mat-icon>
+          <input
+            type="text"
+            placeholder="Search medicines..." />
+        </div>
+
+        <button
+          mat-icon-button
+          matTooltip="Notifications"
+          [matBadge]="lowStockCount"
+          matBadgeColor="warn">
+          <mat-icon>notifications_none</mat-icon>
+        </button>
+
+        <button mat-icon-button>
+          <mat-icon>dark_mode</mat-icon>
+        </button>
+
+        <div class="top-avatar">SA</div>
+
+      </div>
+
+    </mat-toolbar>
+
+
+    <main class="content">
+
+      <div class="page-heading">
+
+        <div>
+          <span class="eyebrow">OVERVIEW</span>
+
+          <h2>Medicine inventory performance</h2>
+
+          <p>
+            Real-time stock information from your MedStock database.
+          </p>
+        </div>
+
+        <a
+          routerLink="/medicines"
+          mat-flat-button
+          color="primary">
+
+          <mat-icon>medication</mat-icon>
+          View Medicines
+
+        </a>
+
+      </div>
+
+
+      @if (errorMessage) {
+
+        <div class="error-box">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+      }
+
+
+      <section class="summary-grid">
+
+        <mat-card class="summary-card">
+
+          <div class="summary-icon medicines-icon">
+            <mat-icon>medication</mat-icon>
+          </div>
+
+          <div class="summary-content">
+            <span>Total Medicines</span>
+            <strong>{{ totalMedicines }}</strong>
+            <small>{{ totalUnits | number }} total units</small>
+          </div>
+
+        </mat-card>
+
+
+        <mat-card class="summary-card">
+
+          <div class="summary-icon value-icon">
+            <mat-icon>payments</mat-icon>
+          </div>
+
+          <div class="summary-content">
+            <span>Inventory Value</span>
+            <strong>
+              ETB {{ inventoryValue | number:'1.0-2' }}
+            </strong>
+            <small>Current stock value</small>
+          </div>
+
+        </mat-card>
+
+
+        <mat-card class="summary-card warning-card">
+
+          <div class="summary-icon warning-icon">
+            <mat-icon>warning_amber</mat-icon>
+          </div>
+
+          <div class="summary-content">
+            <span>Low Stock</span>
+            <strong>{{ lowStockCount }}</strong>
+            <small>{{ lowStockPercentage }}% of medicines</small>
+          </div>
+
+        </mat-card>
+
+
+        <mat-card class="summary-card danger-card">
+
+          <div class="summary-icon danger-icon">
+            <mat-icon>event_busy</mat-icon>
+          </div>
+
+          <div class="summary-content">
+            <span>Expiring Soon</span>
+            <strong>{{ expiringSoonCount }}</strong>
+            <small>Within next 30 days</small>
+          </div>
+
+        </mat-card>
+
+      </section>
+
+
+      <section class="analytics-grid">
+
+
+        <mat-card class="panel sales-panel">
+
+          <div class="panel-header">
+
+            <div>
+              <span class="eyebrow">INVENTORY MOVEMENT</span>
+              <h3>Stock quantity overview</h3>
+            </div>
+
+            <span class="trend-label">
+              {{ totalUnits | number }} units
+            </span>
+
+          </div>
+
+
+          @if (isLoading) {
+
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+          }
+
+
+          @if (!isLoading && chartPoints.length > 0) {
+
+            <div class="line-chart">
+
+              <svg
+                viewBox="0 0 690 230"
+                preserveAspectRatio="none">
+
+                <line
+                  x1="35"
+                  y1="35"
+                  x2="655"
+                  y2="35"
+                  class="grid-line" />
+
+                <line
+                  x1="35"
+                  y1="85"
+                  x2="655"
+                  y2="85"
+                  class="grid-line" />
+
+                <line
+                  x1="35"
+                  y1="135"
+                  x2="655"
+                  y2="135"
+                  class="grid-line" />
+
+                <line
+                  x1="35"
+                  y1="195"
+                  x2="655"
+                  y2="195"
+                  class="axis-line" />
+
+                <path
+                  [attr.d]="chartAreaPath"
+                  class="chart-area" />
+
+                <path
+                  [attr.d]="chartLinePath"
+                  class="chart-line" />
+
+                @for (point of chartPoints; track point.label) {
+
+                  <circle
+                    [attr.cx]="point.x"
+                    [attr.cy]="point.y"
+                    r="5"
+                    class="chart-point">
+                  </circle>
+
+                }
+
+              </svg>
+
+
+              <div class="chart-labels">
+
+                @for (point of chartPoints; track point.label) {
+
+                  <span [title]="point.label">
+                    {{ point.label }}
+                  </span>
+
+                }
+
+              </div>
+
+            </div>
+
+          }
+
+
+          @if (!isLoading && chartPoints.length === 0) {
+
+            <div class="empty-chart">
+              <mat-icon>show_chart</mat-icon>
+              <span>No medicine data available for the chart.</span>
+            </div>
+
+          }
+
+        </mat-card>
+
+
+
+        <mat-card class="panel health-panel">
+
+          <div class="panel-header">
+
+            <div>
+              <span class="eyebrow">STOCK HEALTH</span>
+              <h3>Current inventory health</h3>
+            </div>
+
+            <mat-icon>monitor_heart</mat-icon>
+
+          </div>
+
+
+          <div class="health-summary">
+
+            <div class="health-number">
+              {{ stockHealthPercentage }}%
+            </div>
+
+            <div>
+              <strong>Healthy stock</strong>
+              <span>
+                {{ safeCount }} of {{ totalMedicines }} medicines
+              </span>
+            </div>
+
+          </div>
+
+
+          <div class="health-track">
+            <span [style.width.%]="stockHealthPercentage"></span>
+          </div>
+
+
+          <div class="health-list">
+
+            <div class="health-row">
+
+              <span>
+                <i class="dot safe"></i>
+                In Stock
+              </span>
+
+              <strong>{{ safeCount }}</strong>
+
+            </div>
+
+
+            <div class="health-row">
+
+              <span>
+                <i class="dot warning"></i>
+                Low Stock
+              </span>
+
+              <strong>{{ lowStockCount }}</strong>
+
+            </div>
+
+
+            <div class="health-row">
+
+              <span>
+                <i class="dot danger"></i>
+                Out of Stock
+              </span>
+
+              <strong>{{ outOfStockCount }}</strong>
+
+            </div>
+
+          </div>
+
+        </mat-card>
+
+      </section>
+
+
+
+      <mat-card class="inventory-panel">
+
+        <div class="inventory-header">
+
+          <div>
+            <span class="eyebrow">MEDICINE REGISTER</span>
+            <h3>Current medicines</h3>
+            <p>Latest medicine records from the database.</p>
+          </div>
+
+          <a
+            routerLink="/medicines"
+            mat-stroked-button
+            color="primary">
+
+            View all
+
+          </a>
+
+        </div>
+
+
+        @if (isLoading) {
+
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+        }
+
+
+        @if (!isLoading && medicines.length === 0) {
+
+          <div class="empty-table">
+
+            <mat-icon>inventory_2</mat-icon>
+
+            <span>No medicines found.</span>
+
+          </div>
+
+        }
+
+
+        @if (medicines.length > 0) {
+
+          <div class="table-wrapper">
+
+            <table>
+
+              <thead>
+
+                <tr>
+                  <th>Medicine</th>
+                  <th>Batch</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Price</th>
+                  <th>Expiry</th>
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (medicine of medicines.slice(0, 8); track medicine.id) {
+
+                  <tr>
+
+                    <td>
+                      <strong>{{ medicine.name }}</strong>
+                    </td>
+
+                    <td class="batch">
+                      {{ medicine.batchNumber }}
+                    </td>
+
+                    <td>
+                      {{ medicine.quantity | number }}
+                    </td>
+
+                    <td>
+
+                      <span
+                        class="status"
+                        [class.status-safe]="medicine.status === 'InStock'"
+                        [class.status-warning]="medicine.status === 'LowStock'"
+                        [class.status-danger]="medicine.status === 'OutOfStock'">
+
+                        {{ medicine.status }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+                      ETB {{ medicine.price || 0 | number:'1.2-2' }}
+                    </td>
+
+                    <td
+                      [class.expiry-warning]="isExpiringSoon(medicine)">
+
+                      {{ medicine.expiryDate | date:'mediumDate' }}
+
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        }
+
+      </mat-card>
+
+
+    </main>
+
+  </section>
+
+</div>
